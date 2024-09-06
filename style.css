@@ -1,0 +1,68 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top : 3em;
+}
+.weather-app {
+  background-color: white;
+  padding: 1.25em;
+  border-radius: 0.625em;
+  box-shadow: 0 0 0.625em rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 45em;
+}
+.weather-app h1 {
+  font-size: 1.5em;
+  margin-bottom: 1.25em;
+}
+.input-container {
+  display: flex;
+  justify-content: center;
+  margin-left: 2em;
+}
+.weather-app input {
+  padding: 0.625em;
+  width: 60%;
+  border: 0.0625em solid #ccc;
+  border-radius: 0.3125em 0 0 0.3125em;
+}
+.weather-app button {
+  padding: 0.625em 1.25em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0 0.3125em 0.3125em 0;
+  cursor: pointer;
+  margin-left: 2em;
+}
+.weather-app button:hover {
+  background-color: #0056b3;
+}
+.weather-icon {
+  font-size: 3em;
+  margin: 0.5em 0;
+}
+.temperature {
+  font-size: 3em;
+  margin: 0.625em 0;
+}
+.description {
+  font-size: 1.125em;
+  color: #666;
+  margin-bottom: 1.25em;
+}
+.details {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 2em;
+  margin-left: 2em;
+}
+.details div {
+  background-color: #f0f0f0;
+  padding: 0.625em;
+  border-radius: 0.3125em;
+  width: 30%;
+  margin: 0em 1em
+}
