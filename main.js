@@ -1,44 +1,65 @@
-async function getWeather() {
-    const city = document.getElementById('city').value;
-    const geocodeUrl = `https://nominatim.openstreetmap.org/search?city=${city}&format=json`;
+const getWeather = async () => {
+    const city = document.getElementById('city').value.trim();
 
-    const geocodeResponse = await fetch(geocodeUrl);
-    const geocodeData = await geocodeResponse.json();
+    document.getElementById('weather-icon').style.display = 'none';
+    document.getElementById('temperature').style.display = 'none';
+    document.getElementById('description').style.display = 'none';
+    document.querySelector('.details').style.display = 'none';
+    document.getElementById('spinner').style.display = 'flex';
 
-    if (geocodeData.length > 0) {
-        const lat = geocodeData[0].lat;
-        const lon = geocodeData[0].lon;
-        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,windspeed_10m`;
+    if (city === '') {
+        document.getElementById('spinner').style.display = 'none';
+        return;
+    }
 
-        const weatherResponse = await fetch(weatherUrl);
-        const weatherData = await weatherResponse.json();
+    try {
+        const geocodeUrl = `https://nominatim.openstreetmap.org/search?city=${city}&format=json`;
+        const geocodeResponse = await fetch(geocodeUrl);
+        const geocodeData = await geocodeResponse.json();
 
-        if (weatherData.hourly && weatherData.hourly.temperature_2m) {
-            const temperature = weatherData.hourly.temperature_2m[0];
-            const humidity = weatherData.hourly.relative_humidity_2m[0];
-            const windSpeed = weatherData.hourly.windspeed_10m[0];
+        if (geocodeData.length > 0) {
+            const { lat, lon } = geocodeData[0];
+            const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,windspeed_10m`;
+            const weatherResponse = await fetch(weatherUrl);
+            const weatherData = await weatherResponse.json();
 
-            document.getElementById('temperature').innerText = `${Math.round(temperature)}°C`;
-            document.getElementById('feels-like').innerText = `Feels like: ${Math.round(temperature)}`;
-            document.getElementById('humidity').innerText = `Humidity: ${humidity}%`;
-            document.getElementById('wind-speed').innerText = `Wind speed: ${windSpeed} m/s`;
+            if (weatherData.hourly && weatherData.hourly.temperature_2m) {
+                const [temperature] = weatherData.hourly.temperature_2m;
+                const [humidity] = weatherData.hourly.relative_humidity_2m;
+                const [windSpeed] = weatherData.hourly.windspeed_10m;
 
-            const weatherIcon = document.getElementById('weather-icon');
-            const description = document.getElementById('description');
-            if (temperature > 25) {
-                weatherIcon.innerHTML = `<img src="Images/sunny.png" alt="Sunny weather icon" height="80" width="80">`;
-                description.innerText = 'Sunny';
-            } else if (temperature > 15) {
-                weatherIcon.innerHTML = `<img src="Images/Cloudy.png" alt="Cloudy weather icon" height="80" width="80">`;
-                description.innerText = 'Cloudy';
+                document.getElementById('temperature').innerText = `${Math.round(temperature)}°C`;
+                document.getElementById('feels-like').innerText = `Feels like: ${Math.round(temperature)}°C`;
+                document.getElementById('humidity').innerText = `Humidity: ${humidity}%`;
+                document.getElementById('wind-speed').innerText = `Wind speed: ${windSpeed} m/s`;
+
+                const weatherIcon = document.getElementById('weather-icon');
+                const description = document.getElementById('description');
+                if (temperature > 25) {
+                    weatherIcon.innerHTML = `<img src="Images/sunny.png" alt="Sunny weather icon" height="80" width="80">`;
+                    description.innerText = 'Sunny';
+                } else if (temperature > 15) {
+                    weatherIcon.innerHTML = `<img src="Images/Cloudy.png" alt="Cloudy weather icon" height="80" width="80">`;
+                    description.innerText = 'Cloudy';
+                } else {
+                    weatherIcon.innerHTML = `<img src="Images/rainy.png" alt="Rainy weather icon" height="80" width="80">`;
+                    description.innerText = 'Rainy';
+                }
+
+                weatherIcon.style.display = 'block';
+                document.getElementById('temperature').style.display = 'block';
+                document.getElementById('description').style.display = 'block';
+                document.querySelector('.details').style.display = 'flex';
             } else {
-                weatherIcon.innerHTML = `<img src="Images/rainy.png" alt="Rainy weather icon" height="80" width="80">`;
-                description.innerText = 'Rainy';
+                alert('Weather data not available');
             }
         } else {
-            alert('Weather data not available');
+            alert('City not found');
         }
-    } else {
-        alert('City not found');
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        alert('An error occurred while fetching the weather data');
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
     }
-}
+};
