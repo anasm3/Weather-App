@@ -1,5 +1,5 @@
 # Weather-App
-Weather App with the help of API calling and JS.
+Weather App with the help of API calling and JS
 
 Links:
 
